@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import ru.geekbrain.android.jpgconverter.databinding.ActivityMainBinding
 
 const val GALLERY_REQUEST = 1
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity(), MainJPGConverterContact.MainView {
 
     lateinit var binding: ActivityMainBinding
     val TAG = "MainActivity"
-    var presenter = Presenter(this)
+    var presenter = Presenter(this, AndroidSchedulers.mainThread())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,7 +128,7 @@ class MainActivity : AppCompatActivity(), MainJPGConverterContact.MainView {
 
     }
 
-    override fun showToast(s: String) {
+    override fun showMessage(s: String) {
         Toast.makeText(this, s,Toast.LENGTH_LONG).show()
     }
 

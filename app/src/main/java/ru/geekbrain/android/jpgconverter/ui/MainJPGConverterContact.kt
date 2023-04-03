@@ -11,7 +11,7 @@ class MainJPGConverterContact {
     interface MainView : MvpView{
         fun onSuccess(convertedImageString: String?)
         fun showProgress(show:Boolean)
-        fun showToast(s: String)
+        fun showMessage(s: String)
     }
 
     interface MainPresenter{

@@ -1,7 +1,7 @@
 package ru.geekbrain.android.jpgconverter.ui
 
 import android.net.Uri
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -9,7 +9,8 @@ import moxy.MvpPresenter
 import ru.geekbrain.android.jpgconverter.model.ConverterImpl
 
 
-class Presenter(private val view: MainJPGConverterContact.MainView) :
+class Presenter(private val view: MainJPGConverterContact.MainView,
+                private val observerScheduler: Scheduler) :
     MvpPresenter<MainJPGConverterContact.MainView>(),
     MainJPGConverterContact.MainPresenter {
 
@@ -26,18 +27,18 @@ class Presenter(private val view: MainJPGConverterContact.MainView) :
                 }
             }
                 .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(observerScheduler)
                 .subscribe({
                     view.showProgress(false)
                     if(it.isNotEmpty()){
                         view.onSuccess(it)
                     } else {
-                        view.showToast("Can't convert ${jpgImageUri?.path}")
+                        view.showMessage("Can't convert ${jpgImageUri?.path}")
                     }
                 },
                     {
                         view.showProgress(false)
-                        view.showToast("Error: ${it.message}")
+                        view.showMessage("Error: ${it.message}")
                         it.printStackTrace()
                     })
         } catch (t: Throwable) {
