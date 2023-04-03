@@ -5,13 +5,11 @@ import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import moxy.MvpPresenter
 import ru.geekbrain.android.jpgconverter.model.ConverterImpl
 
 
 class Presenter(private val view: MainJPGConverterContact.MainView,
                 private val observerScheduler: Scheduler) :
-    MvpPresenter<MainJPGConverterContact.MainView>(),
     MainJPGConverterContact.MainPresenter {
 
     private val converter = ConverterImpl()
@@ -42,6 +40,7 @@ class Presenter(private val view: MainJPGConverterContact.MainView,
                         it.printStackTrace()
                     })
         } catch (t: Throwable) {
+            view.showMessage("Error: ${t.message}")
             t.printStackTrace()
         }
     }
@@ -53,11 +52,5 @@ class Presenter(private val view: MainJPGConverterContact.MainView,
         }
     }
 
-
-    override fun onDestroy() {
-        disposable?.dispose()
-        super.onDestroy()
-
-    }
 
 }

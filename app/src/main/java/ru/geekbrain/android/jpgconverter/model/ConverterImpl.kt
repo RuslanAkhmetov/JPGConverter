@@ -33,10 +33,10 @@ class ConverterImpl : Converter {
                 jpgFileUri
             )
 
- /*           bitmap = MediaStore.Images.Media.getBitmap(         // дает ошибку
-                App.instance.contentResolver,                    //2023-04-03 15:04:25.472 8646-8646/ru.geekbrain.android.jpgconverter W/System.err: java.io.FileNotFoundException: No content provider: /external_primary/images/media/1000003235
-                Uri.parse(jpgFileUri.path)
-            )*/
+            /*           bitmap = MediaStore.Images.Media.getBitmap(         // дает ошибку
+                           App.instance.contentResolver,                    //2023-04-03 15:04:25.472 8646-8646/ru.geekbrain.android.jpgconverter W/System.err: java.io.FileNotFoundException: No content provider: /external_primary/images/media/1000003235
+                           Uri.parse(jpgFileUri.path)
+                       )*/
 
             val file = File(cacheHolder.path + "/" + CONVERTED_FILE_NAME)
             if (!file.exists()) {
@@ -51,7 +51,6 @@ class ConverterImpl : Converter {
             return file.path
         }
         return null
-
     }
 
 }
