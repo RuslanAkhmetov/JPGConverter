@@ -1,10 +1,8 @@
 package ru.geekbrain.android.jpgconverter.ui
 
 import android.net.Uri
-import io.reactivex.rxjava3.core.Single
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
 class MainJPGConverterContact {
@@ -13,10 +11,11 @@ class MainJPGConverterContact {
     interface MainView : MvpView{
         fun onSuccess(convertedImageString: String?)
         fun showProgress(show:Boolean)
+        fun showToast(s: String)
     }
 
     interface MainPresenter{
-        fun  converterObservable(jpgImageUri: Uri?)  //: Single<String?>
+        fun  converterObservable(jpgImageUri: Uri?)
         fun cancelConvertation()
     }
 }

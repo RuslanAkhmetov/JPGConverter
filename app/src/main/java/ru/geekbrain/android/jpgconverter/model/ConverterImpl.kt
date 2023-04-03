@@ -4,14 +4,12 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Looper
 import android.provider.MediaStore
-import android.util.Log
 import ru.geekbrain.android.jpgconverter.App
 import java.io.File
 import java.io.FileOutputStream
 
 class ConverterImpl : Converter {
 
-    private val TAG = "ConverterImpl"
     private val CHILD_DIR = "images"
     private val CONVERTED_FILE_NAME = "converted.png"
 

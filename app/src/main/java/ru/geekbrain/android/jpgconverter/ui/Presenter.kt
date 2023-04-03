@@ -1,14 +1,12 @@
 package ru.geekbrain.android.jpgconverter.ui
 
 import android.net.Uri
-import android.os.Looper
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import moxy.MvpPresenter
 import ru.geekbrain.android.jpgconverter.model.ConverterImpl
-import java.util.logging.Handler
 
 
 class Presenter(private val view: MainJPGConverterContact.MainView) :
@@ -18,8 +16,6 @@ class Presenter(private val view: MainJPGConverterContact.MainView) :
     private val converter = ConverterImpl()
 
     var disposable: Disposable? = null
-
-    var pngFile = ""
 
     override fun converterObservable(jpgImageUri: Uri?) {
         try {
@@ -32,12 +28,16 @@ class Presenter(private val view: MainJPGConverterContact.MainView) :
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    it?.let {
-                        view.showProgress(false)
+                    view.showProgress(false)
+                    if(it.isNotEmpty()){
                         view.onSuccess(it)
+                    } else {
+                        view.showToast("Can't convert ${jpgImageUri?.path}")
                     }
                 },
                     {
+                        view.showProgress(false)
+                        view.showToast("Error: ${it.message}")
                         it.printStackTrace()
                     })
         } catch (t: Throwable) {

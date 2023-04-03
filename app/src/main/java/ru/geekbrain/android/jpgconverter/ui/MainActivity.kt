@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -80,6 +81,7 @@ class MainActivity : AppCompatActivity(), MainJPGConverterContact.MainView {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -106,8 +108,8 @@ class MainActivity : AppCompatActivity(), MainJPGConverterContact.MainView {
         ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
                 PERMISSION_GRANTED
 
-    override fun onSuccess(convertedImagePath: String?) {
-        Uri.parse(convertedImagePath)?.let {
+    override fun onSuccess(convertedImageString: String?) {
+        Uri.parse(convertedImageString)?.let {
             binding.convertedImageView.setImageURI(null)
             binding.convertedImageView.setImageURI(it)
         }
@@ -123,6 +125,10 @@ class MainActivity : AppCompatActivity(), MainJPGConverterContact.MainView {
             binding.convertedImageView.visibility =View.VISIBLE
         }
 
+    }
+
+    override fun showToast(s: String) {
+        Toast.makeText(this, s,Toast.LENGTH_LONG).show()
     }
 
 
