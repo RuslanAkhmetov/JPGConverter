@@ -4,16 +4,12 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
-import androidx.annotation.RequiresApi
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
 import ru.geekbrain.android.jpgconverter.databinding.ActivityMainBinding
 
 const val GALLERY_REQUEST = 1
@@ -40,6 +36,10 @@ class MainActivity : AppCompatActivity(), MainJPGConverterContact.MainView {
             val photoPickerIntent = Intent(Intent.ACTION_PICK)
             photoPickerIntent.type = "image/*.jpg"
             startActivityForResult(photoPickerIntent, GALLERY_REQUEST)
+        }
+
+        binding.cancelImageButton.setOnClickListener {
+            presenter.cancelConvertation()
         }
     }
 
@@ -80,7 +80,6 @@ class MainActivity : AppCompatActivity(), MainJPGConverterContact.MainView {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -89,22 +88,8 @@ class MainActivity : AppCompatActivity(), MainJPGConverterContact.MainView {
                 if (resultCode == RESULT_OK) {
 
                     val selectedImage = data?.data
-                    Log.i("TAG", "onActivityResult:$selectedImage \n ----- ${data?.data?.path}")
                     try {
                         presenter.converterObservable(selectedImage)
-                            .subscribeOn(Schedulers.computation())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ imagePath ->
-                                onSuccess(imagePath)
-                            }, {
-                                Toast.makeText(
-                                    this,
-                                    "Error : ${it.message}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                it.printStackTrace()
-                            })
-                        //presenter.onConvert(selectedImage)
 
                     } catch (t: Throwable) {
                         Log.i(TAG, "onActivityResult: Error")
@@ -122,12 +107,22 @@ class MainActivity : AppCompatActivity(), MainJPGConverterContact.MainView {
                 PERMISSION_GRANTED
 
     override fun onSuccess(convertedImagePath: String?) {
-        Log.i(TAG, "onSuccess: ${convertedImagePath}")
-        Log.i(TAG, "onSuccess: ${Uri.parse(convertedImagePath).path}")
         Uri.parse(convertedImagePath)?.let {
             binding.convertedImageView.setImageURI(null)
             binding.convertedImageView.setImageURI(it)
         }
+    }
+
+    override fun showProgress(show: Boolean) {
+        if(show) {
+            binding.progressCircular.visibility = View.VISIBLE
+            binding.convertedImageView.visibility = View.GONE
+        }
+        else {
+            binding.progressCircular.visibility = View.GONE
+            binding.convertedImageView.visibility =View.VISIBLE
+        }
+
     }
 
 
